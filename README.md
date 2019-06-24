@@ -22,5 +22,5 @@ However, I use an older version that I have made a few modifications to, that su
 This bot uses Scryfall syntax, which can be found here: https://scryfall.com/docs/syntax
 
 To get a list of bot commands, type !help in the chat box and the bot will return a list of all valid commands.  
-To serach for a card to get the gatherer information wrap your search inquiry like so: [[<CARDNAME> <additional syntax>]].  
-To serach for a card to get the EDHRec information wrap your search inquiry like so: {{<CARDNAME>}}. Additional syntax is not used for this option.  
+To serach for a card to get the gatherer information wrap your search inquiry like so: [[\<CARDNAME\> \<additional syntax\>]].  
+To serach for a card to get the EDHRec information wrap your search inquiry like so: {{\<CARDNAME\>}}. Additional syntax is not used for this option.  
