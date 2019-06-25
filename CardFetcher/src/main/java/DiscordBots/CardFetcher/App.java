@@ -2,11 +2,12 @@ package DiscordBots.CardFetcher;
 
 import forohfor.scryfall.api.Card;
 import forohfor.scryfall.api.MTGCardQuery;
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
@@ -18,6 +19,8 @@ import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 /**
  * 
@@ -26,18 +29,28 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class App extends ListenerAdapter {
 
-  public static final String versionID = "v1.3_14a";
+  public static final String versionID = "v1.4";
 
-  private static File keywords;
-  private static Scanner input;
-  private static String fileText;
+  private static Object keywords;
   private static final Random rng = new Random();
 
   public static void main(String[] args) throws Exception {
     JDA jda = new JDABuilder(AccountType.BOT).setToken("INSERT TOKEN HERE").build();
     jda.addEventListener(new App());
+    initFiles();
   }
-    
+  
+  private static void initFiles() {
+    try {
+      keywords = new JSONParser().parse(
+          new BufferedReader(new InputStreamReader(
+              new FileInputStream("./keywords.json"), "UTF-8")));
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+  
   @Override
   public void onReady(ReadyEvent e) {
     System.out.println("\nCardFetcher "+versionID+" is ready to receive commands!\n");
@@ -220,78 +233,16 @@ public class App extends ListenerAdapter {
   }
   
   private void searchRules(String command, MessageChannel channel, User user) {
-    loadText(keywords);
-
-    String rule = "";
-
-    command = StringUtils.substringAfter(command, "kw").trim();
-
-    String[] commandSplit = command.split(" ");
+    String rule = JSONTranslate.getRule(command, (JSONObject)keywords);
     
-    String keywordSearch = "";
-    
-    for (int i = 0; i < commandSplit.length; i++) {
-      keywordSearch = keywordSearch + commandSplit[i].substring(0, 1).toUpperCase()
-          + commandSplit[i].substring(1, commandSplit[i].length());
-      
-      if (i != commandSplit.length - 1) {
-        keywordSearch = keywordSearch + " ";
-      }
-    }
-    
-    System.out.println(keywordSearch);
-    
-    if (keywordSearch.equals("First Strike")) {
-      rule = StringUtils.substringBetween(fileText, "702.7. First Strike", "~");
-    }
-    else {
-      rule = StringUtils.substringBetween(fileText, keywordSearch, "~");
-    }
-    
-    if (rule != null) {
-      if (rule.length() > 2000) {
-        
-        String[] ruleParts = new String[rule.length() / 2000 + 1];
-        
-        int indexMin = 0;
-        
-        for (int i = 0; i < ruleParts.length; i++) {
-          if (rule.length() >= indexMin + 2000) {
-            ruleParts[i] = rule.substring(indexMin, indexMin + 2000);
-            
-            indexMin += 2000;
-            
-            channel.sendMessage(ruleParts[i]).queue();
-          }
-          else {
-            ruleParts[i] = rule.substring(indexMin, rule.length());
-            
-            channel.sendMessage(ruleParts[i]).queue();
-          }
-        }
-      }
-      else {
-        channel.sendMessage(rule).queue();
-      }
+    if(rule != null) {
+      channel.sendMessage(rule).queue();
     }
     else {
       channel.sendMessage("That rule could not be found. It either does not exist, or the"
-          + " admin has not yet added it to the database.").queue();
+        + " admin has not yet added it to the database.").queue();
     }
-  }
-  
-  private void loadText(File fileToLoad) {
-    try {
-      fileText = "";
-      input = new Scanner(fileToLoad);
-      while (input.hasNextLine()) {
-        fileText += input.nextLine() + "\n";
-      }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
+  }  
   
   private void roll(MessageChannel channel, User user, int num) {
     channel.sendMessage(user.getAsMention() + " You rolled: " + (1 + rng.nextInt(num))).queue();
