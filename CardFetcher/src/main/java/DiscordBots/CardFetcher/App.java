@@ -29,8 +29,6 @@ import org.json.simple.parser.JSONParser;
  */
 public class App extends ListenerAdapter {
 
-  public static final String versionID = "v1.4";
-
   private static Object keywords; // holds the json object for the keywords
   private static final Random rng = new Random(); // used in the roll() method
 
@@ -59,7 +57,7 @@ public class App extends ListenerAdapter {
    */
   @Override
   public void onReady(ReadyEvent e) {
-    System.out.println("\nCardFetcher "+versionID+" is ready to receive commands!\n");
+    System.out.println("\nCardFetcher is ready to receive commands!\n");
   }
 
   /**

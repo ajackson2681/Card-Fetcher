@@ -5,6 +5,7 @@ import org.apache.commons.text.similarity.JaroWinklerDistance;
 import org.json.simple.JSONObject;
 
 public class JSONTranslate {
+  
   private static String convertedKey(String input) {
     String[] inputSplit = input.split(" ");
     String keywordKey = "";
