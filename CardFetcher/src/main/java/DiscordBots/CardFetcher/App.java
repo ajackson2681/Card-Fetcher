@@ -263,9 +263,6 @@ public class App extends ListenerAdapter {
               .queue();
         }
         break;
-      case "version":
-        channel.sendMessage("I am currently running " + versionID + ".").queue();
-        break;
       default:
         channel.sendMessage("Invalid command, please try again").queue();
     }
