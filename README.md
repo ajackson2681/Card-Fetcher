@@ -1,5 +1,8 @@
 # MTG Card Fetcher Bot for Discord
 
+## Note:
+This version of the bot is largely deprecated and will have no additional work done on it. I previously was going to integrate it with Gradle to handle the build process, but I'm going to largely focus my efforts on the TypeScript version of this bot. No additional changes will be made to this repository for the foreseeable future.
+
 ## Usage
 In order to use this bot, you'll need to create a discord app to generate a host token, to do this, simply go here and follow thi instructions:  
 https://discordapp.com/developers/applications/  
@@ -12,16 +15,12 @@ After doing this, download the repo here, and in the App.java main method, where
         initFiles();
     }
 
----
-
 ## Dependencies
 
 This bot makes use of Apache commons for substring extraction, and JSON simple/forohfor scryfall API to interface with scryfall.com in order to load card data. forohfor is not made be me, but is instead located at:  
 https://github.com/ForOhForError/ScryfallAPIBinding
 
 However, I use an older version that I have made a few modifications to, that supports my usage a little better.
-
----
 
 ## Use In Discord
 
